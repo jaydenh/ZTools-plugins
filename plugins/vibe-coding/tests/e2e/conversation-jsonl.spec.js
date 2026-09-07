@@ -84,7 +84,7 @@ test('超过数据库单文档上限的会话通过 JSONL 切换并重载', asyn
     await executeInContents(
       electronApp,
       settingsUrl,
-      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
     )
     try {
       await expect.poll(() => readContentsText(electronApp, pluginUrl), { timeout: 15_000 }).toContain('全能 AI 助手')

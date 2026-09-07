@@ -8,7 +8,7 @@
     "prebuild": "node scripts/prepare-build.mjs",
     "build": "vite build && node scripts/copy-preload-deps.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test:unit": "node --test tests/unit/*.spec.js",
+    "test:unit": "node scripts/test-unit.mjs",
     "test:e2e": "playwright test --config=playwright.e2e.config.js"
   },
   "dependencies": {

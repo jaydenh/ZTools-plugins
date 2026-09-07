@@ -169,7 +169,7 @@ test("切换会话时后台响应继续运行且按会话隔离", async ({}, tes
       await executeInContents(
         electronApp,
         settingsUrlFragment,
-        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
       ),
     ).toMatchObject({ success: true });
     await expect

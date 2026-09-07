@@ -140,7 +140,7 @@ test('Shell Executor 分组切换后能力弹窗仍正常绘制', async ({}, tes
     const launchResult = await executeInContents(
       electronApp,
       settingsUrl,
-      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`
+      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`
     )
     expect(launchResult).toMatchObject({ success: true })
     await expect

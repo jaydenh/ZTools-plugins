@@ -1,5 +1,5 @@
 /**
- * 在隔离的 ZTools 宿主数据中添加测试供应商和模型。
+ * 在隔离的 QuickDesk 宿主数据中添加测试供应商和模型。
  * @param {(electronApp: unknown, urlFragment: string, source: string) => Promise<unknown>} executeInContents 设置页脚本执行函数。
  * @param {unknown} electronApp Electron 应用实例。
  * @param {string} settingsUrlFragment 设置插件 URL 片段。

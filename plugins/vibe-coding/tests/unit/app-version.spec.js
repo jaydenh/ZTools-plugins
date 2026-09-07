@@ -3,12 +3,27 @@ import test from "node:test";
 import {
   compareAppVersions,
   isSupportedZToolsVersion,
+  isSupportedQuickDeskHost,
 } from "../../src/utils/app-version.js";
 
-test("ZTools 3.2.0 及更高版本通过最低版本检查", () => {
+test("旧版 ZTools 版本比较保持兼容", () => {
   assert.equal(isSupportedZToolsVersion("3.2.0"), true);
   assert.equal(isSupportedZToolsVersion("3.2.1-beta.1"), true);
   assert.equal(isSupportedZToolsVersion("v4.0.0"), true);
+});
+
+test("QuickDesk 0.2.4 按接口能力通过检查，而非 ZTools 版本号", () => {
+  const host = {
+    getAppVersion: () => '0.2.4',
+    aiChat() {}, allAiModels() {}, onPluginEnter() {}, getPath() {},
+    dbStorage: { getItem() {}, setItem() {} },
+  };
+  assert.equal(isSupportedQuickDeskHost(host), true);
+  for (const name of ['aiChat', 'allAiModels', 'onPluginEnter', 'getPath']) {
+    assert.equal(isSupportedQuickDeskHost({ ...host, [name]: undefined }), false);
+  }
+  assert.equal(isSupportedQuickDeskHost({ ...host, dbStorage: {} }), false);
+  assert.equal(isSupportedQuickDeskHost(undefined), false);
 });
 
 test("低于最低版本或最低版本预发布版本不通过", () => {

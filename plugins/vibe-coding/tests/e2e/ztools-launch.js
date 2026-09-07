@@ -1,12 +1,12 @@
 import path from 'node:path'
+import { accessSync, constants } from 'node:fs'
 
-const INSTALLED_ZTOOLS_PATH = '/Applications/ZTools.app/Contents/MacOS/ZTools'
 const DEVELOPMENT_SETTINGS_URL = 'http://127.0.0.1:15177'
 const INSTALLED_SETTINGS_URL_FRAGMENT = 'internal-plugins/setting/index.html'
 
 /**
- * 根据当前平台解析 ZTools 源码仓库所安装的 Electron 可执行文件。
- * @param {string} sourceRoot ZTools 源码仓库绝对路径。
+ * 根据当前平台解析 QuickDesk 源码仓库所安装的 Electron 可执行文件。
+ * @param {string} sourceRoot QuickDesk 源码仓库绝对路径。
  * @returns {string} Electron 可执行文件绝对路径。
  * @throws {Error} 当前平台不受开发态 E2E 启动器支持时抛出。
  */
@@ -14,12 +14,12 @@ function resolveDevelopmentElectronPath(sourceRoot) {
   if (process.platform === 'darwin') return path.join(sourceRoot, 'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')
   if (process.platform === 'win32') return path.join(sourceRoot, 'node_modules/electron/dist/electron.exe')
   if (process.platform === 'linux') return path.join(sourceRoot, 'node_modules/electron/dist/electron')
-  throw new Error(`当前平台不支持 ZTools 开发态 E2E：${process.platform}`)
+  throw new Error(`当前平台不支持 QuickDesk 开发态 E2E：${process.platform}`)
 }
 
 /**
- * 构建隔离启动 ZTools 所需的 Playwright Electron 参数。
- * @param {string} dataRoot 测试专用 ZTools 数据目录。
+ * 构建隔离启动 QuickDesk 所需的 Playwright Electron 参数。
+ * @param {string} dataRoot 测试专用 QuickDesk 数据目录。
  * @param {string} legacyRoot 测试专用旧版数据目录。
  * @returns {Record<string, unknown>} 可直接传入 `electron.launch` 的参数。
  */
@@ -42,8 +42,13 @@ export function createZToolsLaunchOptions(dataRoot, legacyRoot) {
       env: environment,
     }
   }
+  const executablePath = String(process.env.ZTOOLS_E2E_EXECUTABLE_PATH || '').trim()
+  if (!path.isAbsolute(executablePath)) {
+    throw new Error('请设置 ZTOOLS_E2E_EXECUTABLE_PATH 为 QuickDesk 可执行文件的绝对路径')
+  }
+  accessSync(executablePath, constants.X_OK)
   return {
-    executablePath: process.env.ZTOOLS_E2E_EXECUTABLE_PATH || INSTALLED_ZTOOLS_PATH,
+    executablePath,
     args: [],
     env: environment,
   }

@@ -1,17 +1,17 @@
-# ZTools AI 插件开发指南
+# QuickDesk AI 插件开发指南
 
-本文档面向 AI 编程助手，用于在接到“开发一个 ZTools 插件”的需求后，快速做出正确技术判断并产出可运行、可构建、可发布的插件项目。
+本文档面向 AI 编程助手，用于在接到“开发一个 QuickDesk 插件”的需求后，快速做出正确技术判断并产出可运行、可构建、可发布的插件项目。
 
-ZTools 插件的核心模型是：**Web 前端页面 + Node.js 本地能力 + ZTools 平台 API**。
+QuickDesk 插件的核心模型是：**Web 前端页面 + Node.js 本地能力 + QuickDesk 平台 API**。
 
 - 前端页面负责 UI 和交互，可使用原生 HTML/CSS/JS、Vue、React 等技术。
 - `preload.js` 负责暴露本地能力，可使用 Node.js 16.x 原生模块、Electron 渲染进程 API 和可读的第三方 CommonJS 模块。
 - `plugin.json` 负责声明插件元信息、入口、Logo、功能和触发指令。
-- `window.ztools` 是插件调用 ZTools 能力的全局 API。
+- `window.ztools` 是插件调用 QuickDesk 能力的全局 API。
 
 ## AI 开发原则
 
-当 AI 生成或修改 ZTools 插件时，必须遵守以下规则：
+当 AI 生成或修改 QuickDesk 插件时，必须遵守以下规则：
 
 1. 先明确插件形态：有 UI 插件、纯 preload 插件、文件处理插件、图片处理插件、主搜索增强插件、AI 能力插件。
 2. 先写 `plugin.json`，再实现 `preload.js` 和前端入口。
@@ -82,7 +82,7 @@ npm run dev
 }
 ```
 
-ZTools 开发模式会使用 `development.main` 覆盖基础 `main`。
+QuickDesk 开发模式会使用 `development.main` 覆盖基础 `main`。
 
 ### 3. 构建插件
 
@@ -90,7 +90,7 @@ ZTools 开发模式会使用 `development.main` 覆盖基础 `main`。
 npm run build
 ```
 
-构建后页面输出到 `src-ztools/dist/`。最终提交给 ZTools 的插件应用目录是 `src-ztools/`，而不是带有页面源码、构建缓存和开发依赖的项目根目录。
+构建后页面输出到 `src-ztools/dist/`。最终提交给 QuickDesk 的插件应用目录是 `src-ztools/`，而不是带有页面源码、构建缓存和开发依赖的项目根目录。
 
 ### 4. 发布插件
 
@@ -289,7 +289,7 @@ AI 生成项目时要确认 Vite 只把页面写到 `src-ztools/dist/`。`plugin
 
 ### 图片指令
 
-用户向 ZTools 粘贴图片时触发。
+用户向 QuickDesk 粘贴图片时触发。
 
 ```json
 {
@@ -308,7 +308,7 @@ AI 生成项目时要确认 Vite 只把页面写到 `src-ztools/dist/`。`plugin
 
 ### 文件指令
 
-用户向 ZTools 粘贴文件或文件夹时触发。
+用户向 QuickDesk 粘贴文件或文件夹时触发。
 
 ```json
 {
@@ -453,13 +453,13 @@ ztools.onPluginDetach(() => {
 });
 ```
 
-## 常用 ZTools API
+## 常用 QuickDesk API
 
 ### 基础能力
 
 | API                                         | 用途                          |
 | ------------------------------------------- | ----------------------------- |
-| `ztools.getAppName()`                       | 获取应用名，固定返回 `ZTools` |
+| `ztools.getAppName()`                       | 获取应用名，固定返回 `QuickDesk` |
 | `ztools.getAppVersion()`                    | 获取应用版本                  |
 | `ztools.getNativeId()`                      | 获取设备唯一标识              |
 | `ztools.isMacOS()` / `ztools.isMacOs()`     | 判断 macOS                    |
@@ -493,7 +493,7 @@ ztools.removeSubInput();
 
 ## 界面样式和主题
 
-ZTools 主窗口可能使用透明或半透明材质。UI 插件不要写死大面积纯白、浅灰或深色背景，应优先使用透明背景和 CSS 变量适配主题。推荐全局样式：
+QuickDesk 主窗口可能使用透明或半透明材质。UI 插件不要写死大面积纯白、浅灰或深色背景，应优先使用透明背景和 CSS 变量适配主题。推荐全局样式：
 
 ```css
 :root {
@@ -718,7 +718,7 @@ const assistant = await request;
 
 `streamBatchIntervalMs` 可以把连续正文、思考和同一工具参数事件合并后再回调，降低高频 SSE 分片造成的 IPC 压力；`0` 或省略时保持逐事件回调，最大值为 `1000` 毫秒。状态边界和请求结束前会强制刷新，不会丢失尾部内容。
 
-`allAiModels()` 的 `value` 是适合保存到会话并传回 `model` 的稳定标识；`contextWindow`、`inputModalities` 和 `reasoning` 由 ZTools 统一管理。模型列表不会暴露供应商 API Key 或 API URL。
+`allAiModels()` 的 `value` 是适合保存到会话并传回 `model` 的稳定标识；`contextWindow`、`inputModalities` 和 `reasoning` 由 QuickDesk 统一管理。模型列表不会暴露供应商 API Key 或 API URL。
 
 ## 任务模板
 
@@ -836,7 +836,7 @@ const assistant = await request;
 
 - 简单生成使用 `ztools.ai`；自行管理工具循环、推理事件和 usage 时使用 `ztools.aiChat`。
 - 流式输出时提供停止按钮并调用返回请求的 `abort()`。
-- 供应商、API Key、上下文窗口和推理协议由 ZTools 管理，插件只保存 `allAiModels()` 返回的模型 `value`。
+- 供应商、API Key、上下文窗口和推理协议由 QuickDesk 管理，插件只保存 `allAiModels()` 返回的模型 `value`。
 - 使用 `allAiModels()` 展示可选模型时要处理获取失败。
 - 长内容输入要限制长度或分段处理。
 - 提供复制结果、重新生成、清空历史等基础操作。
@@ -961,7 +961,7 @@ AI 完成插件开发后，应逐项检查：
 | `preload.js` 使用 `import`                         | 改为 CommonJS `require`                                                    |
 | Vite 项目根目录是 ESM，`preload.js` 不能 `require` | 在 `src-ztools/preload/package.json` 写 `{ "type": "commonjs" }`           |
 | UI 插件使用 `window.exports` + `mode: "none"`      | 删除 `window.exports`，改用 `ztools.onPluginEnter` 接收入口参数            |
-| UI 背景写死为纯白、浅灰或深色                      | 使用透明背景、CSS 变量和 `prefers-color-scheme` 适配 ZTools 材质与暗色模式 |
+| UI 背景写死为纯白、浅灰或深色                      | 使用透明背景、CSS 变量和 `prefers-color-scheme` 适配 QuickDesk 材质与暗色模式 |
 | Node.js 依赖被打包压缩                             | 保持依赖源码可读并放在 `preload.js` 同级                                   |
 | `main` 指向开发服务器但生产包中不可用              | 生产 `main` 指向本地 HTML，开发地址放 `development.main`                   |
 | 使用 `over` 但没有长度限制                         | 设置合理的 `minLength` 和 `maxLength`                                      |
@@ -971,7 +971,7 @@ AI 完成插件开发后，应逐项检查：
 
 ## 给 AI 的输出格式建议
 
-当 AI 交付 ZTools 插件代码时，建议按以下格式说明：
+当 AI 交付 QuickDesk 插件代码时，建议按以下格式说明：
 
 ```text
 已实现：
@@ -987,7 +987,7 @@ AI 完成插件开发后，应逐项检查：
 
 验证：
 - 检查 `src-ztools/` 是否包含 plugin.json、preload、Logo，以及 `dist/index.html`
-- 在 ZTools 中用指定关键词触发插件
+- 在 QuickDesk 中用指定关键词触发插件
 ```
 
 如果无法完成构建或验证，必须明确说明阻塞原因和下一步需要用户提供的信息。

@@ -116,9 +116,7 @@ import {
   isShellToolName,
   TOOL_GROUPS,
 } from "./tools";
-import { isSupportedZToolsVersion } from "./utils/app-version";
-
-const MIN_ZTOOLS_VERSION = "3.2.0";
+import { isSupportedQuickDeskHost } from "./utils/app-version";
 
 /**
  * 在聊天正文真正需要渲染时加载 Markdown AST 与渲染组件。
@@ -146,17 +144,14 @@ async function checkZToolsVersion() {
   try {
     const getAppVersion = window.ztools?.getAppVersion;
     if (typeof getAppVersion !== "function") {
-      throw new Error("ZTools getAppVersion API is unavailable");
+      throw new Error("QuickDesk getAppVersion API is unavailable");
     }
 
     const version = await Promise.resolve(getAppVersion.call(window.ztools));
     ztoolsVersion.value = String(version ?? "").trim();
-    ztoolsVersionSupported.value = isSupportedZToolsVersion(
-      ztoolsVersion.value,
-      MIN_ZTOOLS_VERSION,
-    );
+    ztoolsVersionSupported.value = isSupportedQuickDeskHost(window.ztools);
   } catch (error) {
-    console.error("获取 ZTools 版本失败:", error);
+    console.error("获取 QuickDesk 版本失败:", error);
   } finally {
     ztoolsVersionCheckPending.value = false;
   }
@@ -3491,7 +3486,7 @@ function startConversationScheduler(runtime, initialSubmission = null) {
 function sendMessage(mode = busySubmissionMode.value) {
   if (!canSend.value) {
     if (!selectedModelOption.value)
-      error.value = "请先在 ZTools 设置中添加并启用 AI 模型。";
+      error.value = "请先在 QuickDesk 设置中添加并启用 AI 模型。";
     return undefined;
   }
   const runtime = activeRuntime.value;
@@ -4099,7 +4094,7 @@ onBeforeUnmount(() => {
         </button>
         <div class="project-heading">
           <strong>{{
-            activeConversation?.title || "ZTools Vibe Coding"
+            activeConversation?.title || "QuickDesk Vibe Coding"
           }}</strong>
         </div>
         <div class="topbar-actions">
@@ -4157,7 +4152,7 @@ onBeforeUnmount(() => {
                   搜索最新资料
                 </button>
                 <button type="button" @click="enablePluginDevelopment()">
-                  开发 ZTools 插件
+                  开发 QuickDesk 插件
                 </button>
               </div>
             </div>
@@ -4347,7 +4342,7 @@ onBeforeUnmount(() => {
                   ? activeWorkspace
                     ? '描述需求，或继续处理这个工作区…'
                     : '问任何问题，或描述你想完成的任务…'
-                  : '请先在 ZTools 设置中添加 AI 模型…'
+                  : '请先在 QuickDesk 设置中添加 AI 模型…'
               "
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
@@ -4839,12 +4834,12 @@ onBeforeUnmount(() => {
     aria-live="assertive"
   >
     <section class="ztools-version-gate-card">
-      <h1 v-if="ztoolsVersionCheckPending">正在检查 ZTools 版本</h1>
+      <h1 v-if="ztoolsVersionCheckPending">正在检查 QuickDesk 版本</h1>
       <template v-else>
-        <h1>ZTools 版本不受支持</h1>
+        <h1>QuickDesk 版本不受支持</h1>
         <p>
           当前版本：{{ ztoolsVersion || "未知" }}<br />
-          请升级 ZTools 至 {{ MIN_ZTOOLS_VERSION }} 或更高版本后再使用。
+          当前宿主缺少必需的 AI 或存储接口，请升级 QuickDesk 后再使用。
         </p>
       </template>
     </section>

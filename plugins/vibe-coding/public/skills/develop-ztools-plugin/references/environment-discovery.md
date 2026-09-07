@@ -25,30 +25,30 @@
 
 - API、清单和安全契约优先使用本 Skill 的 `references/`，模板优先使用本 Skill 的 `assets/`。
 - 相邻插件仅在当前工作区或可访问的同级目录中确实存在时作为样式和工程参考；不存在时继续使用内置资料。
-- ZTools 源码、文档源码和插件集合仓库都是可选资源。只有用户提供路径或从当前工作区可靠发现后才能读取。
+- QuickDesk 源码、文档源码和插件集合仓库都是可选资源。只有用户提供路径或从当前工作区可靠发现后才能读取。
 - 不要因为缺少源码仓库而阻止插件创建、构建、静态校验或安装版宿主 E2E。
 
-## 发现 ZTools 宿主
+## 发现 QuickDesk 宿主
 
-真实 Electron E2E 必须复用当前运行中的 ZTools 版本。ZVC preload 从当前 Electron 进程读取宿主位置；macOS Renderer 位于 Helper 应用中，因此会反向解析同一 `.app` 的主程序，Windows/Linux 则使用当前进程对应的应用可执行文件。解析结果会在启动 Bash 子进程时注入：
+真实 Electron E2E 必须复用当前运行中的 QuickDesk 版本。ZVC preload 从当前 Electron 进程读取宿主位置；macOS Renderer 位于 Helper 应用中，因此会反向解析同一 `.app` 的主程序，Windows/Linux 则使用当前进程对应的应用可执行文件。解析结果会在启动 Bash 子进程时注入：
 
 ```text
-ZTOOLS_E2E_EXECUTABLE_PATH=<当前 ZTools 进程可执行文件>
+ZTOOLS_E2E_EXECUTABLE_PATH=<当前 QuickDesk 进程可执行文件>
 ```
 
-生成项目的 E2E 模板只读取并校验这个值，不扫描标准安装目录、`PATH` 或其他 ZTools 进程，避免误用另一安装版本。开发版 ZTools 已提供 `ZTOOLS_E2E_APP_ROOT` 时，模板会同时将源码根目录作为 Electron 启动参数。测试仍会启动一个使用临时数据目录的独立实例，不连接当前用户实例。
+生成项目的 E2E 模板只读取并校验这个值，不扫描标准安装目录、`PATH` 或其他 QuickDesk 进程，避免误用另一安装版本。开发版 QuickDesk 已提供 `ZTOOLS_E2E_APP_ROOT` 时，模板会同时将源码根目录作为 Electron 启动参数。测试仍会启动一个使用临时数据目录的独立实例，不连接当前用户实例。
 
 如果测试命令不是从 ZVC 工具环境启动，环境变量不会自动存在。此时应从 ZVC 中执行测试，或由用户明确指定当前宿主路径：
 
 ```bash
-ZTOOLS_E2E_EXECUTABLE_PATH="<ZTools 可执行文件绝对路径>" npm run test:e2e
+ZTOOLS_E2E_EXECUTABLE_PATH="<QuickDesk 可执行文件绝对路径>" npm run test:e2e
 ```
 
 变量必须是存在且可执行的绝对路径。配置无效时立即停止，不得回退到另一版本、下载新宿主或扫描系统进程猜测路径。
 
 ## 可选的源码宿主
 
-只有需求明确涉及尚未发布的宿主 API，且用户提供或工作区发现了 ZTools 源码目录时，才使用源码宿主：
+只有需求明确涉及尚未发布的宿主 API，且用户提供或工作区发现了 QuickDesk 源码目录时，才使用源码宿主：
 
 1. 读取源码仓库自己的 `AGENTS.md` 和脚本定义。
 2. 确认可执行入口、构建产物和依赖实际存在。
@@ -106,7 +106,7 @@ const settingsContents = webContents
 环境能力不足时按以下边界继续推进：
 
 - 缺少相邻插件：使用内置模板和契约。
-- 缺少 ZTools 源码：使用安装版宿主。
-- 当前 ZTools 进程没有提供有效可执行路径：执行单元测试、构建、preload 语法检查和 `validate_plugin.py`，将 Electron E2E 标记为未执行。
+- 缺少 QuickDesk 源码：使用安装版宿主。
+- 当前 QuickDesk 进程没有提供有效可执行路径：执行单元测试、构建、preload 语法检查和 `validate_plugin.py`，将 Electron E2E 标记为未执行。
 - 模型不支持图片理解：跳过依赖视觉判断的截图检查，但保留可执行的 Electron DOM、交互和状态断言。
 - 缺少必要路径且不同选择会改变交付结果：停止相关步骤并向用户询问，不擅自创建机器绑定的回退路径。

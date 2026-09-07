@@ -13,7 +13,7 @@ const fileContent = ref('')
 const error = ref('')
 
 const handleOpenDialog = () => {
-  // 通过 ZTools 的 api 打开文件选择窗口
+  // 通过 QuickDesk 的 api 打开文件选择窗口
   const files = window.ztools.showOpenDialog({
     title: '选择文件',
     properties: ['openFile']

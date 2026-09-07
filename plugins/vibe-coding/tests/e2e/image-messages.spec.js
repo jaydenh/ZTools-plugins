@@ -91,7 +91,7 @@ test('用户图片和 read 工具图片使用附件引用进入模型上下文',
     await executeInContents(electronApp, settingsUrl, `window.ztools.internal.installDevPlugin('ztools-vibe-coding')`)
     const plugins = await executeInContents(electronApp, settingsUrl, 'window.ztools.internal.getAllPlugins()')
     const developmentPlugin = plugins.find((plugin) => plugin.name === 'ztools-vibe-coding__dev' && plugin.isDevelopment)
-    await executeInContents(electronApp, settingsUrl, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)
+    await executeInContents(electronApp, settingsUrl, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)
     await expect.poll(() => readContentsText(electronApp, pluginUrl), { timeout: 15_000 }).toContain('全能 AI 助手')
 
     const conversationId = await executeInContents(electronApp, pluginUrl, `(() => {

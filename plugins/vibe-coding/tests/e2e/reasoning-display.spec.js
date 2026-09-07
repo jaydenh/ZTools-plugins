@@ -602,7 +602,7 @@ test("流式显示并保留模型思考过程", async ({}, testInfo) => {
     const launchResult = await executeInContents(
       electronApp,
       settingsUrlFragment,
-      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
     );
     expect(launchResult).toMatchObject({ success: true });
     await expect

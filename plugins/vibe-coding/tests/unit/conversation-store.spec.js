@@ -14,7 +14,7 @@ const {
 } = require('../../public/conversation-store.js')
 
 /**
- * 创建满足 ZTools 同步数据库返回契约的内存数据库。
+ * 创建满足 QuickDesk 同步数据库返回契约的内存数据库。
  * @returns {{documents: Map<string, Record<string, unknown>>, get: Function, put: Function, allDocs: Function, remove: Function}} 内存数据库。
  */
 function createMemoryDb() {

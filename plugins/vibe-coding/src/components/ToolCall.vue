@@ -361,7 +361,7 @@ function clearCopyFeedback() {
 async function copyShellOutput() {
   if (!shellOutput.value) return
   try {
-    // 优先使用 ZTools 剪贴板能力，浏览器剪贴板作为开发环境回退。
+    // 优先使用 QuickDesk 剪贴板能力，浏览器剪贴板作为开发环境回退。
     if (typeof window.ztools?.copyText === 'function') await Promise.resolve(window.ztools.copyText(shellOutput.value))
     else await navigator.clipboard.writeText(shellOutput.value)
     clearCopyFeedback()

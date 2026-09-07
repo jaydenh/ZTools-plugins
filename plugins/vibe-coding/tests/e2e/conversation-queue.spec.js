@@ -153,8 +153,8 @@ async function selectBusyMode(electronApp, label) {
 }
 
 /**
- * 解析 ZTools 生产应用或源码开发环境使用的 Electron 可执行文件。
- * @param {string} sourceAppRoot ZTools 源码根目录；为空表示使用生产应用。
+ * 解析 QuickDesk 生产应用或源码开发环境使用的 Electron 可执行文件。
+ * @param {string} sourceAppRoot QuickDesk 源码根目录；为空表示使用生产应用。
  * @returns {string} Electron 可执行文件绝对路径。
  */
 function resolveHostExecutable(sourceAppRoot) {
@@ -171,7 +171,7 @@ function resolveHostExecutable(sourceAppRoot) {
       "MacOS",
       "Electron",
     );
-  return "/Applications/ZTools.app/Contents/MacOS/ZTools";
+  return "/Applications/QuickDesk.app/Contents/MacOS/QuickDesk";
 }
 
 test("运行中的 Session 支持排队、安全插话和停止后继续队列", async ({}, testInfo) => {
@@ -255,7 +255,7 @@ test("运行中的 Session 支持排队、安全插话和停止后继续队列",
       await executeInContents(
         electronApp,
         settingsUrlFragment,
-        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
       ),
     ).toMatchObject({ success: true });
     await expect

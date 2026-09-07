@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 skill 内置模板创建一个 ZTools 插件项目。"""
+"""从 skill 内置模板创建一个 QuickDesk 插件项目。"""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ const status = ref('等待插件指令')
 const payload = ref<unknown>(null)
 
 /**
- * 接收 ZTools 的功能入口事件并更新当前页面状态。
+ * 接收 QuickDesk 的功能入口事件并更新当前页面状态。
  * @param action 宿主传入的插件动作。
  * @returns 无返回值。
  */
@@ -81,7 +81,7 @@ window.services = Object.freeze({})
 
 def parse_args() -> argparse.Namespace:
     """解析模板创建参数。"""
-    parser = argparse.ArgumentParser(description="从内置模板创建 ZTools 插件项目")
+    parser = argparse.ArgumentParser(description="从内置模板创建 QuickDesk 插件项目")
     parser.add_argument("project_dir", type=Path, help="新项目目录；允许已存在但必须为空")
     parser.add_argument(
         "--template",
@@ -247,7 +247,7 @@ def main() -> int:
         print(f"创建失败：{error}", file=sys.stderr)
         return 1
 
-    print(f"已创建 ZTools Vue 项目：{project_dir}")
+    print(f"已创建 QuickDesk Vue 项目：{project_dir}")
     print(f"插件清单：{project_dir / 'src-ztools' / 'plugin.json'}")
     print("下一步（必须先完成）：根据插件定位生成独立 SVG 图标，并转换为 src-ztools/logo.png；模板 logo.png 只能作为临时占位资源")
     print("完成 Logo 替换并检查透明背景、尺寸和清晰度后，再运行 npm install && npm run build")

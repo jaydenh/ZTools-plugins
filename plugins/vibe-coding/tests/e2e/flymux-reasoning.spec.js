@@ -82,7 +82,7 @@ test('Flymux gpt-5.6-sol 返回并显示真实思考内容', async ({}, testInfo
     electronApp = await electron.launch({
       executablePath:
         process.env.ZTOOLS_E2E_EXECUTABLE_PATH ||
-        '/Applications/ZTools.app/Contents/MacOS/ZTools',
+        '/Applications/QuickDesk.app/Contents/MacOS/QuickDesk',
       args: [],
       env: {
         ...electronEnvironment,
@@ -141,7 +141,7 @@ test('Flymux gpt-5.6-sol 返回并显示真实思考内容', async ({}, testInfo
     const launchResult = await executeInContents(
       electronApp,
       settingsUrlFragment,
-      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`
+      `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`
     )
     expect(launchResult).toMatchObject({ success: true })
     await expect

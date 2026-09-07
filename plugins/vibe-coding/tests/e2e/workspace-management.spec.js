@@ -65,7 +65,7 @@ async function capturePlugin(electronApp) {
   }, pluginUrl)
 }
 
-test('工作区选择、分组和会话锁定在真实 ZTools 中保持一致', async ({}, testInfo) => {
+test('工作区选择、分组和会话锁定在真实 QuickDesk 中保持一致', async ({}, testInfo) => {
   const dataRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'zvc-workspace-e2e-'))
   const legacyRoot = path.join(dataRoot, 'legacy')
   const workspaceRoot = path.join(dataRoot, 'workspaces')
@@ -100,7 +100,7 @@ test('工作区选择、分组和会话锁定在真实 ZTools 中保持一致', 
     expect(await executeInContents(electronApp, settingsUrlFragment, `window.ztools.internal.installDevPlugin('ztools-vibe-coding')`)).toMatchObject({ success: true })
     const plugins = await executeInContents(electronApp, settingsUrlFragment, 'window.ztools.internal.getAllPlugins()')
     const developmentPlugin = plugins.find((plugin) => plugin.name === 'ztools-vibe-coding__dev' && plugin.isDevelopment)
-    expect(await executeInContents(electronApp, settingsUrlFragment, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)).toMatchObject({ success: true })
+    expect(await executeInContents(electronApp, settingsUrlFragment, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)).toMatchObject({ success: true })
     await expect.poll(() => readContentsText(electronApp, pluginUrl), { timeout: 20_000 }).toContain('今天想完成什么')
 
     const bundledSkillState = await executeInContents(electronApp, pluginUrl, `(async () => {
@@ -115,7 +115,7 @@ test('工作区选择、分组和会话锁定在真实 ZTools 中保持一致', 
     })()`)
     expect(bundledSkillState.skill).toMatchObject({ id: 'develop-ztools-plugin', name: 'develop-ztools-plugins', path: installedSkillRoot })
     expect(bundledSkillState.invocationName).toBe('develop-ztools-plugins')
-    expect(bundledSkillState.instructionText).toContain('# 开发 ZTools 插件')
+    expect(bundledSkillState.instructionText).toContain('# 开发 QuickDesk 插件')
     expect(bundledSkillState.instructionText).toContain('scripts/create_plugin.py')
     expect(bundledSkillState.instructionText).toContain('禁止交付模板自带或通用占位图标')
     expect(bundledSkillState.instructionText).toContain('生成独立 SVG 源图标')

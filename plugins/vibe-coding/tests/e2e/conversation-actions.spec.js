@@ -190,7 +190,7 @@ test("完整 Turn 支持复制与分叉且会话菜单使用归档", async ({}, 
       await executeInContents(
         electronApp,
         settingsUrlFragment,
-        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+        `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
       ),
     ).toMatchObject({ success: true });
     try {

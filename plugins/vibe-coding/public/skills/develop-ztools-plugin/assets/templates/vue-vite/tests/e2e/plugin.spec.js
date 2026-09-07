@@ -10,19 +10,19 @@ const sourcePluginRoot = path.join(projectRoot, 'src-ztools')
 const settingsUrlFragment = 'internal-plugins/setting/index.html'
 
 /**
- * 读取由当前运行中 ZTools 进程注入的宿主可执行文件路径。
- * @returns {Promise<string>} ZTools 可执行文件绝对路径。
+ * 读取由当前运行中 QuickDesk 进程注入的宿主可执行文件路径。
+ * @returns {Promise<string>} QuickDesk 可执行文件绝对路径。
  * @throws 宿主路径缺失、不是绝对路径或不可执行时抛出。
  */
 async function resolveZToolsExecutable() {
   const executablePath = String(process.env.ZTOOLS_E2E_EXECUTABLE_PATH || '').trim()
-  if (!executablePath) throw new Error('当前 ZTools 进程未提供宿主路径，请从 ZVC 中运行测试')
+  if (!executablePath) throw new Error('当前 QuickDesk 进程未提供宿主路径，请从 ZVC 中运行测试')
   if (!path.isAbsolute(executablePath)) throw new Error('ZTOOLS_E2E_EXECUTABLE_PATH 必须是绝对路径')
   try {
     await fs.access(executablePath, fsConstants.X_OK)
     return executablePath
   } catch {
-    throw new Error(`当前 ZTools 宿主不存在或不可执行：${executablePath}`)
+    throw new Error(`当前 QuickDesk 宿主不存在或不可执行：${executablePath}`)
   }
 }
 
@@ -96,7 +96,7 @@ async function inspectPluginView(electronApp, expectedUrl) {
   }, expectedUrl)
 }
 
-test('可在隔离的真实 ZTools 中安装并显示生产插件', async ({}, testInfo) => {
+test('可在隔离的真实 QuickDesk 中安装并显示生产插件', async ({}, testInfo) => {
   const dataRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'ztools-plugin-e2e-'))
   const legacyRoot = path.join(dataRoot, 'legacy')
   const pluginRoot = path.join(dataRoot, 'plugin')
@@ -113,7 +113,7 @@ test('可在隔离的真实 ZTools 中安装并显示生产插件', async ({}, t
 
   await fs.mkdir(legacyRoot, { recursive: true })
   try {
-    // 使用当前 ZTools 进程对应的宿主和隔离目录，避免读取或污染用户的真实数据。
+    // 使用当前 QuickDesk 进程对应的宿主和隔离目录，避免读取或污染用户的真实数据。
     const executablePath = await resolveZToolsExecutable()
     const developmentAppRoot = String(process.env.ZTOOLS_E2E_APP_ROOT || '').trim()
     electronApp = await electron.launch({

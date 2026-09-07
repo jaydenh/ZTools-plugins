@@ -25,7 +25,7 @@ const CONVERSATION_STORAGE_VERSION = 5;
 const MAX_OUTPUT_CHARS = 120000;
 const MAX_WEB_RESULTS = 10;
 const MAX_WEB_READ = 30000;
-const BUNDLED_SKILL_REVISIONS = { "develop-ztools-plugin": "14" };
+const BUNDLED_SKILL_REVISIONS = { "develop-ztools-plugin": "15" };
 const DEFAULT_ENABLED_TOOLS = [];
 const DEFAULT_STREAM_BATCH_INTERVAL_MS = 50;
 const MAX_STREAM_BATCH_INTERVAL_MS = 1000;
@@ -97,7 +97,7 @@ const debugChat = (...args) => {
 };
 
 /**
- * 从当前 ZTools Electron 进程取得可重新启动主应用的真实宿主路径。
+ * 从当前 QuickDesk Electron 进程取得可重新启动主应用的真实宿主路径。
  * @returns {string} 当前宿主主程序绝对路径；进程信息异常时返回空字符串。
  */
 function getRunningHostExecutablePath() {
@@ -123,7 +123,7 @@ function getRunningHostExecutablePath() {
 }
 
 /**
- * 构建可在 Finder 或 Spotlight 启动 ZTools 时使用的命令环境。
+ * 构建可在 Finder 或 Spotlight 启动 QuickDesk 时使用的命令环境。
  * @returns {NodeJS.ProcessEnv} 补齐运行时目录、宿主位置和 Windows Python UTF-8 设置后的进程环境。
  */
 function getCommandEnvironment() {
@@ -167,7 +167,7 @@ function getCommandEnvironment() {
 
   env[pathKey] = [...new Set([...extraPaths, ...currentPath])].join(path.delimiter);
   const runningHostExecutable = getRunningHostExecutablePath();
-  // 子进程始终使用当前 ZTools 实例，避免 E2E 自动选择到另一安装版本。
+  // 子进程始终使用当前 QuickDesk 实例，避免 E2E 自动选择到另一安装版本。
   if (runningHostExecutable)
     env.ZTOOLS_E2E_EXECUTABLE_PATH = runningHostExecutable;
   return env;
@@ -437,7 +437,7 @@ function recordChatDebug(kind, value) {
 }
 
 /**
- * 从 ZTools 插件存储读取值，并在缺失或异常时返回默认值。
+ * 从 QuickDesk 插件存储读取值，并在缺失或异常时返回默认值。
  * @param {string} key 存储键。
  * @param {unknown} fallback 默认值。
  * @returns {unknown} 已存储的值或默认值。
@@ -452,7 +452,7 @@ function readStorage(key, fallback) {
 }
 
 /**
- * 将流事件合并间隔规范化到 ZTools AI 接口允许的范围。
+ * 将流事件合并间隔规范化到 QuickDesk AI 接口允许的范围。
  * @param {unknown} value 用户设置或请求传入的毫秒值。
  * @returns {number} 0 到 1000 之间的整数毫秒值。
  */
@@ -501,7 +501,7 @@ function toPlainStorageValue(value, fallback = null) {
 }
 
 /**
- * 将可序列化值写入 ZTools 插件存储。
+ * 将可序列化值写入 QuickDesk 插件存储。
  * @param {string} key 存储键。
  * @param {unknown} value 待保存值。
  * @returns {boolean} 是否完成写入。
@@ -1129,7 +1129,7 @@ function createConversationView(id, page = {}) {
 }
 
 /**
- * 获取 ZTools 结构化数据库并校验会话存储所需的方法。
+ * 获取 QuickDesk 结构化数据库并校验会话存储所需的方法。
  * @returns {{get: Function, put: Function, allDocs: Function, remove: Function}} 会话数据库接口。
  * @throws {Error} 宿主未提供完整结构化数据库接口时抛出。
  */
@@ -1142,13 +1142,13 @@ function getConversationDb() {
     typeof db.allDocs !== "function" ||
     typeof db.remove !== "function"
   ) {
-    throw new Error("ZTools 结构化数据库不可用，无法保存会话");
+    throw new Error("QuickDesk 结构化数据库不可用，无法保存会话");
   }
   return db;
 }
 
 /**
- * 获取当前 ZTools 数据隔离域中的会话日志根目录。
+ * 获取当前 QuickDesk 数据隔离域中的会话日志根目录。
  * @returns {string} 会话 JSONL 日志根目录。
  * @throws {Error} 宿主未提供用户数据目录时抛出。
  */
@@ -1162,7 +1162,7 @@ let attachmentStore = null;
 /**
  * 延迟创建图片附件存储，确保宿主用户数据目录已经注入。
  * @returns {ReturnType<typeof createAttachmentStore>} 图片附件存储实例。
- * @throws {Error} ZTools 用户数据目录不可用时抛出。
+ * @throws {Error} QuickDesk 用户数据目录不可用时抛出。
  */
 function getAttachmentStore() {
   if (!attachmentStore) {
@@ -1412,7 +1412,7 @@ function createPresentedToolResult(output, presentation, modelContext = []) {
 }
 
 /**
- * 尝试从 ZTools 宿主获取当前插件的短期下载令牌。
+ * 尝试从 QuickDesk 宿主获取当前插件的短期下载令牌。
  * @returns {Promise<string>} 可用的 Bearer token；未登录或宿主不支持时返回空字符串。
  */
 async function getOptionalFileDownloadToken() {
@@ -1663,7 +1663,7 @@ function toIpcCloneable(value, ancestors = new WeakSet()) {
   if (typeof value !== "object")
     throw new Error(`AI 请求包含不可传输的数据类型：${typeof value}`);
   if (ancestors.has(value))
-    throw new Error("AI 请求包含循环引用，无法发送给 ZTools");
+    throw new Error("AI 请求包含循环引用，无法发送给 QuickDesk");
 
   // 只在当前递归路径保留对象，允许不同字段安全复用同一份普通数据。
   ancestors.add(value);
@@ -1687,7 +1687,7 @@ function toIpcCloneable(value, ancestors = new WeakSet()) {
 }
 
 /**
- * 通过 ZTools 宿主管理的 AI 供应商创建一项单轮流式请求。
+ * 通过 QuickDesk 宿主管理的 AI 供应商创建一项单轮流式请求。
  * @param {Record<string, unknown>} options 模型、消息、工具和生成参数。
  * @param {(event: Record<string, unknown>) => void} onEvent 流式事件回调。
  * @returns {{id: string, promise: Promise<Record<string, unknown>>, abort: () => void}} 可中止请求句柄。
@@ -1706,7 +1706,7 @@ function createChatRequest(options, onEvent) {
         });
         if (typeof window.ztools?.aiChat !== "function") {
           const unavailable = new Error(
-            "当前 ZTools 版本不支持统一 AI 接口，请升级 ZTools 后重试",
+            "当前 QuickDesk 版本不支持统一 AI 接口，请升级 QuickDesk 后重试",
           );
           unavailable.code = "HOST_AI_UNAVAILABLE";
           throw unavailable;
@@ -2323,7 +2323,7 @@ window.zvcBridge = {
   /**
    * 使用系统默认应用打开一个已经解析的本机路径。
    * @param {string} targetPath 待打开的文件或目录绝对路径。
-   * @returns {unknown} ZTools 打开路径结果。
+   * @returns {unknown} QuickDesk 打开路径结果。
    * @throws {Error} 路径为空、不存在或不是绝对路径时抛出。
    */
   openPath(targetPath) {
@@ -2339,7 +2339,7 @@ window.zvcBridge = {
   /**
    * 使用系统默认应用打开工作区目录。
    * @param {string} workspaceId 工作区标识。
-   * @returns {unknown} ZTools 打开路径结果。
+   * @returns {unknown} QuickDesk 打开路径结果。
    * @throws {Error} 工作区不存在时抛出。
    */
   openWorkspace(workspaceId) {
@@ -2349,7 +2349,7 @@ window.zvcBridge = {
   /**
    * 在文件管理器中定位工作区目录。
    * @param {string} workspaceId 工作区标识。
-   * @returns {unknown} ZTools 定位路径结果。
+   * @returns {unknown} QuickDesk 定位路径结果。
    * @throws {Error} 工作区不存在时抛出。
    */
   showWorkspace(workspaceId) {

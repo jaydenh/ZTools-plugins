@@ -225,7 +225,7 @@ function applyCommitEvent(conversation, event, normalizeConversation) {
 
 /**
  * 校验数据库写入或删除结果，并把宿主错误转换为异常。
- * @param {unknown} result ZTools 数据库操作结果。
+ * @param {unknown} result QuickDesk 数据库操作结果。
  * @param {string} action 当前操作说明。
  * @returns {void} 无返回值。
  * @throws {Error} 数据库未明确返回成功时抛出。
@@ -393,7 +393,7 @@ function createConversationStore(options) {
   }
 
   /**
-   * 将会话索引写入 ZTools 数据库并沿用现有修订号。
+   * 将会话索引写入 QuickDesk 数据库并沿用现有修订号。
    * @param {Record<string, unknown>} conversation 已规范化会话。
    * @returns {void} 无返回值。
    * @throws {Error} 数据库写入失败时抛出。

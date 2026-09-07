@@ -1,9 +1,11 @@
 ---
 name: develop-ztools-plugins
-description: 创建、修改、调试、验证和交付 ZTools 插件，涵盖 plugin.json 清单、CommonJS preload 桥接、Vue/React/Vite 界面、ZTools API、开发服务器、真实 Electron E2E、截图和可安装插件目录。当需要新建 ZTools 插件、更新已有插件、排查插件生命周期或界面问题、接入宿主能力，或发布前验证插件时使用。
+description: 创建、修改、调试、验证和交付 QuickDesk 插件，涵盖 plugin.json 清单、CommonJS preload 桥接、Vue/React/Vite 界面、QuickDesk API、开发服务器、真实 Electron E2E、截图和可安装插件目录。当需要新建 QuickDesk 插件、更新已有插件、排查插件生命周期或界面问题、接入宿主能力，或发布前验证插件时使用。
 ---
 
-# 开发 ZTools 插件
+# 开发 QuickDesk 插件
+
+QuickDesk 保留 `window.ztools`、`src-ztools`、`@ztools-center/ztools-api-types` 和 `ZTOOLS_*` 环境变量作为兼容契约，不要机械重命名这些接口。宿主采用独立版本号，不能使用 ZTools 3.x 的版本门槛；通过所需 API 是否存在判断兼容性。开发者工具插件 ID 保持 `ztools-developer-plugin`，以匹配 QuickDesk 的内部 API 权限白名单。
 
 ## 确认上下文
 
@@ -11,7 +13,7 @@ description: 创建、修改、调试、验证和交付 ZTools 插件，涵盖 p
 2. 将会话绑定的工作区作为唯一写入根目录；开始和交付前都确认所有文件位于该目录。
 3. 新建插件或进行较大改动时，阅读 [references/new-plugin-workflow.md](references/new-plugin-workflow.md)。
 4. 修改清单、preload、生命周期、存储、安全或打包时，阅读 [references/plugin-contract.md](references/plugin-contract.md)。
-5. 发现项目、ZTools 宿主或运行 Electron E2E 时，阅读 [references/environment-discovery.md](references/environment-discovery.md)，禁止依赖维护者电脑上的固定路径。
+5. 发现项目、QuickDesk 宿主或运行 Electron E2E 时，阅读 [references/environment-discovery.md](references/environment-discovery.md)，禁止依赖维护者电脑上的固定路径。
 6. 只有所需 API 或指令语义未被上述资料覆盖时，再阅读完整的 [references/ai-plugin-guide.md](references/ai-plugin-guide.md)。
 7. 选择结构和样式前检查一到两个相邻插件。相邻插件可能使用旧契约；发生冲突时以本 Skill、`plugin-contract.md` 和校验器为准。
 
@@ -110,11 +112,11 @@ python3 <skill-dir>/scripts/validate_plugin.py <project-dir>/src-ztools
 npm run test:e2e
 ```
 
-该用例使用安装版 ZTools、独立临时数据目录和 `src-ztools/plugin.json`，加载其中构建后的 `dist` 页面，不会连接用户当前实例。根据本次功能继续补充真实 feature、payload、preload、持久化和交互断言；不要用纯浏览器测试替代依赖 ZTools API 的 Electron E2E。
+该用例使用安装版 QuickDesk、独立临时数据目录和 `src-ztools/plugin.json`，加载其中构建后的 `dist` 页面，不会连接用户当前实例。根据本次功能继续补充真实 feature、payload、preload、持久化和交互断言；不要用纯浏览器测试替代依赖 QuickDesk API 的 Electron E2E。
 
 测试必须：
 
-- 使用 `electron.launch({ executablePath })`；从 ZVC Bash 子进程继承 `ZTOOLS_E2E_EXECUTABLE_PATH`，该值由当前运行中的 ZTools Electron 进程提供。禁止扫描标准安装目录或 `PATH` 选择其他宿主版本。
+- 使用 `electron.launch({ executablePath })`；从 ZVC Bash 子进程继承 `ZTOOLS_E2E_EXECUTABLE_PATH`，该值由当前运行中的 QuickDesk Electron 进程提供。禁止扫描标准安装目录或 `PATH` 选择其他宿主版本。
 - 通过包内设置插件导入、安装和启动开发插件，不启动或猜测设置插件开发端口。
 - 等待 WebContents 加载和框架渲染稳定后再读取状态，不用固定短延时假定渲染完成。
 - 截图验证前检查当前模型是否支持图片理解。模型支持读图时，只截取插件 WebContentsView，并实际读取截图检查裁切、重叠、主题和白屏；模型不支持读图或未提供图片读取能力时，跳过依赖截图理解的 E2E 截图测试并在交付中说明，但仍执行可用的 Electron 交互、DOM 和状态断言。

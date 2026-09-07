@@ -185,7 +185,7 @@ async function launchZvc(electronApp) {
   const launched = await executeInContents(
     electronApp,
     settingsUrlFragment,
-    `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
+    `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`,
   );
   expect(launched).toMatchObject({ success: true });
 }

@@ -15,14 +15,14 @@ function normalizeAbsoluteDirectory(value, label) {
 
 /**
  * 解析 ZVC 在当前插件隔离域中使用的全部文件系统目录。
- * @param {(name: string) => unknown} getPath ZTools 路径查询函数。
+ * @param {(name: string) => unknown} getPath QuickDesk 路径查询函数。
  * @param {NodeJS.ProcessEnv} env 当前进程环境变量。
  * @returns {{pluginDataRoot: string, workspaceRoot: string, skillRoot: string, toolBinaryRoot: string, toolOutputRoot: string, sessionRoot: string}} 插件专属数据目录布局。
  * @throws {Error} 宿主没有提供插件数据目录时抛出。
  */
 function createPluginDataPaths(getPath, env = process.env) {
-  if (typeof getPath !== 'function') throw new Error('ZTools 路径 API 不可用');
-  const pluginDataRoot = normalizeAbsoluteDirectory(getPath('pluginData'), 'ZTools 插件数据目录');
+  if (typeof getPath !== 'function') throw new Error('QuickDesk 路径 API 不可用');
+  const pluginDataRoot = normalizeAbsoluteDirectory(getPath('pluginData'), 'QuickDesk 插件数据目录');
 
   /**
    * 优先使用测试或诊断环境的显式目录，否则返回插件数据目录内的默认位置。

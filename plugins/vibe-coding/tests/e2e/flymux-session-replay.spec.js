@@ -304,7 +304,7 @@ test('使用真实 Fly 模型回放指定 JSONL 会话并定位工具流失败�
       Object.entries(process.env).filter(([key, value]) => value && key !== 'ZVC_FLYMUX_API_KEY')
     )
     electronApp = await electron.launch({
-      executablePath: process.env.ZTOOLS_E2E_EXECUTABLE_PATH || '/Applications/ZTools.app/Contents/MacOS/ZTools',
+      executablePath: process.env.ZTOOLS_E2E_EXECUTABLE_PATH || '/Applications/QuickDesk.app/Contents/MacOS/QuickDesk',
       args: [],
       env: {
         ...electronEnvironment,
@@ -338,7 +338,7 @@ test('使用真实 Fly 模型回放指定 JSONL 会话并定位工具流失败�
     await expect(executeInContents(electronApp, settingsUrlFragment, 'window.ztools.internal.installDevPlugin("ztools-vibe-coding")')).resolves.toMatchObject({ success: true })
     const plugins = await executeInContents(electronApp, settingsUrlFragment, 'window.ztools.internal.getAllPlugins()')
     const developmentPlugin = plugins.find((plugin) => plugin.name === 'ztools-vibe-coding__dev' && plugin.isDevelopment)
-    await expect(executeInContents(electronApp, settingsUrlFragment, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'ZTools Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)).resolves.toMatchObject({ success: true })
+    await expect(executeInContents(electronApp, settingsUrlFragment, `window.ztools.internal.launch({path: ${JSON.stringify(developmentPlugin?.path || pluginDevelopmentPath)}, type: 'plugin', name: 'QuickDesk Vibe Coding', param: {payload: '', type: 'text', code: 'zvc-home'}})`)).resolves.toMatchObject({ success: true })
     await expect.poll(() => readPluginText(electronApp), { timeout: 15_000 }).toContain('全能 AI 助手')
 
     const setup = await executeInContentsWithValue(electronApp, pluginUrl, `async (value) => {

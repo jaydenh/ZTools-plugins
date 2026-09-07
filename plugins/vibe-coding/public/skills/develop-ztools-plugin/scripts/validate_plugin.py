@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""验证 ZTools 插件构建产物及其源码侧清单契约。"""
+"""验证 QuickDesk 插件构建产物及其源码侧清单契约。"""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def validate_logo_file(path: Path, result: ValidationResult, label: str) -> None
 
 def parse_args() -> argparse.Namespace:
     """解析命令行参数。"""
-    parser = argparse.ArgumentParser(description="验证 ZTools 插件项目")
+    parser = argparse.ArgumentParser(description="验证 QuickDesk 插件项目")
     parser.add_argument("plugin_path", type=Path, help="插件项目或构建产物目录")
     parser.add_argument(
         "--build-dir",
@@ -182,7 +182,7 @@ def validate_development_url(manifest: dict[str, Any], result: ValidationResult)
 
 
 def validate_manifest(manifest: dict[str, Any], result: ValidationResult) -> None:
-    """校验 ZTools 清单的核心字段及其关系。"""
+    """校验 QuickDesk 清单的核心字段及其关系。"""
     if "pluginName" in manifest:
         result.error("plugin.json 使用了旧字段 'pluginName'；请改为 'name' 和 'title'")
     require_string(manifest, "name", result)
@@ -317,19 +317,19 @@ def report(result: ValidationResult, build_root: Path) -> int:
 
     if result.errors:
         print(
-            f"ZTools 插件校验失败，共 {len(result.errors)} 个错误",
+            f"QuickDesk 插件校验失败，共 {len(result.errors)} 个错误",
             file=sys.stderr,
         )
         return 1
 
-    print(f"ZTools 插件校验通过：{build_root}")
+    print(f"QuickDesk 插件校验通过：{build_root}")
     if result.warnings:
         print(f"校验完成，共 {len(result.warnings)} 个警告")
     return 0
 
 
 def main() -> int:
-    """验证 ZTools 插件项目并返回状态码。"""
+    """验证 QuickDesk 插件项目并返回状态码。"""
     args = parse_args()
     project_root, build_root = resolve_roots(args.plugin_path, args.build_dir)
     result = ValidationResult()

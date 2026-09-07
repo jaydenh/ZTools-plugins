@@ -6,7 +6,7 @@
 export async function writeClipboard(text) {
   const content = String(text ?? '')
   try {
-    // ZTools 插件优先使用宿主能力，避免受 WebContents 安全上下文限制。
+    // QuickDesk 插件优先使用宿主能力，避免受 WebContents 安全上下文限制。
     if (typeof window.ztools?.copyText === 'function') {
       await Promise.resolve(window.ztools.copyText(content))
       return true

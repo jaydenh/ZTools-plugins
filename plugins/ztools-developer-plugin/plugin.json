@@ -1,10 +1,10 @@
 {
   "$schema": "node_modules/@ztools-center/ztools-api-types/resource/ztools.schema.json",
   "name": "ztools-developer-plugin",
-  "title": "ZTools 开发者工具",
-  "description": "ZTools 开发者插件",
+  "title": "QuickDesk 开发者工具",
+  "description": "QuickDesk 开发者插件",
   "author": "xiaou",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.html",
   "logo": "logo.png",
   "preload": "preload.js",
@@ -15,7 +15,7 @@
   "features": [
     {
       "code": "ui.router",
-      "explain": "ZTools 开发者工具",
+      "explain": "QuickDesk 开发者工具",
       "cmds": ["开发者工具"]
     },
     {

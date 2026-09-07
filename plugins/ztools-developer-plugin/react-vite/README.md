@@ -2,7 +2,7 @@
 
 > {{DESCRIPTION}}
 
-这是一个使用 **React 18 + Vite + TypeScript** 构建的 ZTools 插件。
+这是一个使用 **React 18 + Vite + TypeScript** 构建的 QuickDesk 插件。
 
 ## ✨ 功能特性
 
@@ -38,7 +38,7 @@
 │   │   └── index.css
 │   └── Write/                # 写文件功能组件
 │       └── index.tsx
-├── src-ztools/               # ZTools 插件目录
+├── src-ztools/               # QuickDesk 插件目录
 │   ├── logo.png              # 插件图标
 │   ├── plugin.json           # 插件配置文件
 │   ├── preload/              # Preload 脚本目录
@@ -66,7 +66,7 @@ npm install
 npm run dev
 ```
 
-开发服务器将在 `http://localhost:5173` 启动。ZTools 会自动加载开发版本。
+开发服务器将在 `http://localhost:5173` 启动。QuickDesk 会自动加载开发版本。
 
 ### 构建生产版本
 
@@ -206,7 +206,7 @@ export default function MyComponent() {
 }
 ```
 
-### 4. 使用 ZTools API
+### 4. 使用 QuickDesk API
 
 ```tsx
 import React from 'react'
@@ -253,7 +253,7 @@ export default function MyComponent() {
 
 ### 使用 CSS 变量
 
-ZTools 提供了一套 CSS 变量用于主题适配：
+QuickDesk 提供了一套 CSS 变量用于主题适配：
 
 ```css
 .my-component {
@@ -293,13 +293,13 @@ npm run build
 
 ### 2. 测试构建产物
 
-将 `src-ztools/` 作为完整 ZTools 插件目录进行测试或打包。
+将 `src-ztools/` 作为完整 QuickDesk 插件目录进行测试或打包。
 
 ### 3. 发布到插件市场
 
 1. 确保 `plugin.json` 中的信息完整准确
 2. 准备好插件截图和详细说明
-3. 访问 ZTools 插件市场提交插件
+3. 访问 QuickDesk 插件市场提交插件
 
 ## 🔧 常用配置
 
@@ -326,8 +326,8 @@ npm install -D eslint-plugin-react eslint-plugin-react-hooks
 
 ## 📚 相关资源
 
-- [ZTools 官方文档](https://github.com/ztool-center/ztools)
-- [ZTools API 文档](https://github.com/ztool-center/ztools-api-types)
+- [上游 ZTools 兼容接口参考](https://github.com/ztool-center/ztools)
+- [兼容 API 类型定义](https://github.com/ztool-center/ztools-api-types)
 - [React 文档](https://react.dev/)
 - [Vite 文档](https://vitejs.dev/)
 

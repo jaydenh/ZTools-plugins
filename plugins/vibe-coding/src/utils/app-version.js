@@ -1,5 +1,12 @@
 const VERSION_PATTERN = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9a-z.-]+))?(?:\+[0-9a-z.-]+)?$/i
 
+export function isSupportedQuickDeskHost(host) {
+  return ['aiChat', 'allAiModels', 'onPluginEnter', 'getPath'].every(
+    (name) => typeof host?.[name] === 'function',
+  ) && typeof host?.dbStorage?.getItem === 'function'
+    && typeof host?.dbStorage?.setItem === 'function'
+}
+
 function parseVersion(version) {
   const match = String(version ?? "").trim().match(VERSION_PATTERN)
   if (!match) return null
