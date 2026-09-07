@@ -46,19 +46,39 @@ function createPublishEntries({ plugins, categories, zipFiles }) {
     }));
 }
 
-async function publishEntry(entry, { marketUrl, token, fetchImpl = fetch }) {
-  const form = new FormData();
+function isRetriableStatus(status) {
+  return status === 408 || status === 429 || status >= 500;
+}
+
+async function publishEntry(entry, { marketUrl, token, fetchImpl = fetch, retries = 4, sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)) }) {
   const packageData = readFileSync(entry.file);
-  form.append('file', new Blob([packageData], { type: 'application/zip' }), basename(entry.file));
-  form.append('metadata', JSON.stringify(entry.metadata));
-  const response = await fetchImpl(`${marketUrl.replace(/\/$/, '')}/admin/api/market/plugins`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: form
-  });
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`发布 ${entry.metadata.name}@${entry.metadata.version} 失败 (${response.status}): ${body.slice(0, 500)}`);
+  const pluginLabel = `${entry.metadata.name}@${entry.metadata.version}`;
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    const form = new FormData();
+    form.append('file', new Blob([packageData], { type: 'application/zip' }), basename(entry.file));
+    form.append('metadata', JSON.stringify(entry.metadata));
+    try {
+      const response = await fetchImpl(`${marketUrl.replace(/\/$/, '')}/admin/api/market/plugins`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+        signal: AbortSignal.timeout(120_000)
+      });
+      if (response.ok) return;
+      const body = await response.text();
+      const error = new Error(`发布 ${pluginLabel} 失败 (${response.status}): ${body.slice(0, 500)}`);
+      if (!isRetriableStatus(response.status) || attempt === retries) throw error;
+      console.warn(`${error.message}，${attempt * 2} 秒后重试 (${attempt}/${retries})`);
+    } catch (error) {
+      if (attempt === retries || error.message.startsWith(`发布 ${pluginLabel} 失败 (4`)
+        && !error.message.startsWith(`发布 ${pluginLabel} 失败 (408`)
+        && !error.message.startsWith(`发布 ${pluginLabel} 失败 (429`)) {
+        const detail = error.cause?.message ? `${error.message}: ${error.cause.message}` : error.message;
+        throw new Error(`发布 ${pluginLabel} 最终失败: ${detail}`, { cause: error });
+      }
+      console.warn(`发布 ${pluginLabel} 网络异常: ${error.cause?.message || error.message}，${attempt * 2} 秒后重试 (${attempt}/${retries})`);
+    }
+    await sleep(attempt * 2_000);
   }
 }
 
@@ -81,7 +101,7 @@ async function main() {
   }
 }
 
-export { createPublishEntries, normalizePlatforms, publishEntry };
+export { createPublishEntries, isRetriableStatus, normalizePlatforms, publishEntry };
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) main().catch((error) => { console.error(error.message); process.exit(1); });

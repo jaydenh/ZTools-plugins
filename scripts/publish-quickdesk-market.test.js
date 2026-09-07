@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPublishEntries, normalizePlatforms } from './publish-quickdesk-market.js';
+import { createPublishEntries, isRetriableStatus, normalizePlatforms } from './publish-quickdesk-market.js';
 
 test('publishes only zip packages produced by the current run', () => {
   const entries = createPublishEntries({
@@ -20,4 +20,12 @@ test('publishes only zip packages produced by the current run', () => {
 
 test('normalizes platform aliases for the QuickDesk API', () => {
   assert.deepEqual(normalizePlatforms({ platforms: ['windows', 'macOS', 'linux'] }), ['win32', 'darwin', 'linux']);
+});
+
+test('retries only transient HTTP failures', () => {
+  assert.equal(isRetriableStatus(408), true);
+  assert.equal(isRetriableStatus(429), true);
+  assert.equal(isRetriableStatus(502), true);
+  assert.equal(isRetriableStatus(400), false);
+  assert.equal(isRetriableStatus(401), false);
 });
