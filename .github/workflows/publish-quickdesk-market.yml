@@ -1,0 +1,71 @@
+name: Publish Existing Build to QuickDesk Market
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: '包含已构建插件 artifacts 的工作流 Run ID'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout latest publishing scripts
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build information
+        uses: actions/download-artifact@v4
+        with:
+          name: release-build-info
+          path: release
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Download existing plugin packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*-plugin-packages
+          path: release-artifacts
+          merge-multiple: true
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Collect existing plugin packages
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          packages=(release-artifacts/*.zip)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "源工作流没有可发布的插件 ZIP"
+            exit 1
+          fi
+          cp "${packages[@]}" release/
+          echo "复用 ${#packages[@]} 个已构建插件包，不执行构建"
+
+      - name: Download previous release manifest
+        run: node scripts/download-previous-assets.js
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Generate market metadata
+        run: node scripts/generate-plugins-json.js
+
+      - name: Publish plugins to QuickDesk market
+        env:
+          QUICKDESK_MARKET_URL: ${{ vars.QUICKDESK_MARKET_URL || 'https://quick.kgjoys.com' }}
+          QUICKDESK_MARKET_PUBLISH_TOKEN: ${{ secrets.QUICKDESK_MARKET_PUBLISH_TOKEN }}
+        run: node scripts/publish-quickdesk-market.js
