@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPublishEntries, isRetriableStatus, normalizePlatforms } from './publish-quickdesk-market.js';
+import { createPublishEntries, isRetriableStatus, normalizeMarketLogo, normalizePlatforms } from './publish-quickdesk-market.js';
 
 test('publishes only zip packages produced by the current run', () => {
   const entries = createPublishEntries({
@@ -20,6 +20,12 @@ test('publishes only zip packages produced by the current run', () => {
 
 test('normalizes platform aliases for the QuickDesk API', () => {
   assert.deepEqual(normalizePlatforms({ platforms: ['windows', 'macOS', 'linux'] }), ['win32', 'darwin', 'linux']);
+});
+
+test('preserves generated data URL logos larger than the former one-kilobyte limit', () => {
+  const logo = `data:image/png;base64,${'A'.repeat(4096)}`;
+  assert.equal(normalizeMarketLogo(logo), logo);
+  assert.equal(normalizeMarketLogo('logo.png'), '');
 });
 
 test('retries only transient HTTP failures', () => {

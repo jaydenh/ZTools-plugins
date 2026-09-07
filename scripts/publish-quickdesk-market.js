@@ -4,6 +4,19 @@ import { basename, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const RELEASE_DIR = 'release';
+const MAX_MARKET_LOGO_LENGTH = 350_000;
+
+/** Keeps only displayable remote or embedded plugin logos within the market metadata limit.
+ * @param {unknown} logo Candidate logo value from the generated plugin manifest.
+ * @returns {string} Valid market logo URL or an empty string.
+ */
+function normalizeMarketLogo(logo) {
+  if (typeof logo !== 'string' || logo.length > MAX_MARKET_LOGO_LENGTH) return '';
+  const value = logo.trim();
+  if (/^https:\/\/[^\s]+$/i.test(value)) return value;
+  if (/^data:image\/(?:png|jpeg|webp|gif|svg\+xml);base64,[a-z0-9+/=\s]+$/i.test(value)) return value;
+  return '';
+}
 
 function normalizePlatforms(plugin) {
   const values = Array.isArray(plugin.platforms)
@@ -38,7 +51,7 @@ function createPublishEntries({ plugins, categories, zipFiles }) {
         description: plugin.description || '',
         author: typeof plugin.author === 'string' ? plugin.author : plugin.author?.name || '',
         homepage: plugin.homepage || '',
-        logo: typeof plugin.logo === 'string' && plugin.logo.length <= 1000 ? plugin.logo : '',
+        logo: normalizeMarketLogo(plugin.logo),
         category: byCategory.get(plugin.name) || 'other',
         platforms: normalizePlatforms(plugin),
         packageFormat: 'zip'
@@ -101,7 +114,7 @@ async function main() {
   }
 }
 
-export { createPublishEntries, isRetriableStatus, normalizePlatforms, publishEntry };
+export { createPublishEntries, isRetriableStatus, normalizeMarketLogo, normalizePlatforms, publishEntry };
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) main().catch((error) => { console.error(error.message); process.exit(1); });
