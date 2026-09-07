@@ -202,6 +202,12 @@ jobs:
       - name: Generate plugins.json
         run: node scripts/generate-plugins-json.js
 
+      - name: Publish plugins to QuickDesk market
+        env:
+          QUICKDESK_MARKET_URL: ${{ vars.QUICKDESK_MARKET_URL || 'https://quick.kgjoys.com' }}
+          QUICKDESK_MARKET_PUBLISH_TOKEN: ${{ secrets.QUICKDESK_MARKET_PUBLISH_TOKEN }}
+        run: node scripts/publish-quickdesk-market.js
+
       - name: Prepare release body
         run: |
           echo "## 更新的插件" > release/release-body.md
