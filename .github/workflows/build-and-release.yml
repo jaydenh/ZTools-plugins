@@ -254,8 +254,8 @@ jobs:
       - name: Trigger EdgeOne build hook
         run: |
           if [ -z "${EDGEONE_BUILD_URL}" ]; then
-            echo "EDGEONE_BUILD_URL is not set"
-            exit 1
+            echo "::notice::EDGEONE_BUILD_URL is not configured; skipping optional EdgeOne deployment."
+            exit 0
           fi
 
           curl -fsS -X POST "${EDGEONE_BUILD_URL}"
